@@ -1,0 +1,27 @@
+- name: ensure some installations
+  package:
+    update_cache: true
+    name:
+      - sudo
+      - vim
+      - git
+    state: present
+
+- name: create landryl user
+  user:
+    name: landryl
+    password: "{{ landryl_password | password_hash('sha512') }}"
+    state: present
+    shell: /bin/bash
+    groups: sudo
+    append: yes
+
+- name: add ssh key for landryl
+  authorized_key:
+    user: landryl
+    key: "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIMB1uQHMd4Q1tevrjfZgWrM5ktg7V2C9jU4g1SrGbV9O landryl@theShell"
+
+- name: perform general upgrade
+  package:
+    upgrade: yes
+    update_cache: yes

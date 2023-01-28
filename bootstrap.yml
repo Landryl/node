@@ -1,0 +1,8 @@
+- hosts:
+    - node
+  remote_user: landryl
+  vars_files:
+    - vault.yml
+  become: yes
+  roles:
+    - base

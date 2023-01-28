@@ -1,0 +1,47 @@
+- name: installing dependencies
+  become: true
+  package:
+    name:
+      - apt-transport-https
+      - ca-certificates
+      - curl
+      - gnupg
+      - lsb-release
+    update_cache: yes
+
+- name: add apt key
+  become: true
+  apt_key:
+    url: https://download.docker.com/linux/debian/gpg
+    keyring: "/usr/share/keyrings/docker-archive-keyring.gpg"
+
+- name: add docker repository
+  become: true
+  apt_repository:
+    repo: "deb [arch=amd64 signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/{{ ansible_system | lower }}/{{ ansible_distribution | lower }} {{ ansible_distribution_release }} stable"
+
+- name: installing docker and docker python module
+  become: true
+  package:
+    name:
+      - docker-ce
+      - docker-ce-cli
+      - containerd.io
+      - python3-docker
+    state: latest
+    update_cache: yes
+
+- name: ensure docker service is enabled and running
+  become: true
+  service:
+    name: docker
+    state: started
+    enabled: yes
+
+- name: add landryl to docker group
+  become: true
+  user:
+    name: landryl
+    state: present
+    groups: docker
+    append: yes

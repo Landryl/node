@@ -1,0 +1,7 @@
+- name: installing docker-compose
+  become: true
+  package:
+    name:
+      - docker-compose
+    state: latest
+    update_cache: yes
