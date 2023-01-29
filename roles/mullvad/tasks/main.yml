@@ -1,0 +1,26 @@
+- name: make sure mullvad compose folder exists
+  become: true
+  file:
+    path: /node/apps/mullvad
+    state: directory
+    owner: landryl
+    group: landryl
+
+- name: make sure mullvad docker network exists
+  docker_network:
+    name: mullvad
+    state: present
+
+- name: copy docker compose files
+  template:
+    src: docker-compose.yml
+    dest: /node/apps/mullvad/docker-compose.yml
+
+- name: deploy docker compose stack
+  docker_compose:
+    project_src: /node/apps/mullvad
+    remove_orphans: true
+  register: output
+
+- ansible.builtin.debug:
+    var: output

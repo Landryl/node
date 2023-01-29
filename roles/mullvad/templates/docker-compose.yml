@@ -1,0 +1,21 @@
+version: "3"
+
+networks:
+  mullvad:
+    external: true
+
+services:
+  gateway:
+    image: qmcgaw/gluetun
+    container_name: mullvad
+    cap_add:
+      - NET_ADMIN
+    environment:
+      - VPN_SERVICE_PROVIDER=mullvad
+      - VPN_TYPE=wireguard
+      - WIREGUARD_PRIVATE_KEY={{ mullvad_private_key }}
+      - WIREGUARD_ADDRESSES={{ mullvad_address }}
+      - SERVER_COUNTRIES=Norway,Sweden
+      - OWNED_ONLY=yes
+    networks:
+      - mullvad
