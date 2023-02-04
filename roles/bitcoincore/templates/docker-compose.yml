@@ -1,0 +1,15 @@
+version: "3"
+
+services:
+  bitcoincore:
+    container_name: bitcoincore
+    restart: unless-stopped
+    image: btcpayserver/bitcoin:24.0.1
+    environment:
+      BITCOIN_NETWORK: mainnet
+      BITCOIN_EXTRA_ARGS: |
+        rpcbind=0.0.0.0:8332
+        disablewallet=1
+    volumes:
+      - /node/data/bitcoin/data:/data
+    network_mode: container:mullvad

@@ -1,0 +1,21 @@
+- name: make sure bitcoincore compose folder exists
+  become: true
+  file:
+    path: /node/apps/bitcoincore
+    state: directory
+    owner: landryl
+    group: landryl
+
+- name: copy docker compose files
+  template:
+    src: docker-compose.yml
+    dest: /node/apps/bitcoincore/docker-compose.yml
+
+- name: deploy docker compose stack
+  docker_compose:
+    project_src: /node/apps/bitcoincore
+    remove_orphans: true
+  register: output
+
+- ansible.builtin.debug:
+    var: output
