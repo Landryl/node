@@ -19,3 +19,5 @@ services:
       - OWNED_ONLY=yes
     networks:
       - mullvad
+    ports:
+      {{ mullvad_ports | to_nice_yaml | indent(6) }}

@@ -3,4 +3,8 @@
     - vault.yml
   roles:
     - gitea
+    - mullvad
     - bitcoincore
+  vars:
+    mullvad_ports:
+      - "8332:8332"
