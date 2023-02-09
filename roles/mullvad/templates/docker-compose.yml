@@ -1,13 +1,10 @@
 version: "3"
 
-networks:
-  mullvad:
-    external: true
-
 services:
   gateway:
     image: qmcgaw/gluetun
     container_name: mullvad
+    restart: unless-stopped
     cap_add:
       - NET_ADMIN
     environment:
@@ -15,9 +12,7 @@ services:
       - VPN_TYPE=wireguard
       - WIREGUARD_PRIVATE_KEY={{ mullvad_private_key }}
       - WIREGUARD_ADDRESSES={{ mullvad_address }}
-      - SERVER_COUNTRIES=Norway,Sweden
+      - SERVER_COUNTRIES=Norway,Switzerland
       - OWNED_ONLY=yes
-    networks:
-      - mullvad
     ports:
       {{ mullvad_ports | to_nice_yaml | indent(6) }}
