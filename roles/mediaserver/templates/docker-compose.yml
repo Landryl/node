@@ -1,0 +1,56 @@
+version: "3"
+
+services:
+  transmission:
+    image: linuxserver/transmission:latest
+    container_name: transmission
+    restart: unless-stopped
+    environment:
+      - PUID=1000
+      - UGID=1000
+      - TZ=Europe/Paris
+    volumes:
+      - /node/data/mediaserver/transmission/config:/config
+      - /node/data/media/downloads:/data/downloads
+    network_mode: container:mullvad
+
+  jackett:
+    image: linuxserver/jackett:latest
+    container_name: jackett
+    restart: unless-stopped
+    environment:
+      - PUID=1000
+      - UGID=1000
+      - TZ=Europe/Paris
+      - AUTO_UPDATE=true
+      - RUN_OPTS=
+    volumes:
+      - /node/data/mediaserver/jackett/config:/config
+    network_mode: container:mullvad
+
+  radarr:
+    image: linuxserver/radarr:latest
+    container_name: radarr
+    restart: unless-stopped
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Europe/Paris
+    volumes:
+      - /node/data/mediaserver/radarr/config:/config
+      - /node/data/media:/data
+    network_mode: container:mullvad
+
+  jellyfin:
+    image: linuxserver/jellyfin:latest
+    container_name: jellyfin
+    restart: unless-stopped
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Europe/Paris
+    volumes:
+      - /node/data/mediaserver/jellyfin/config:/config
+      - /node/data/media/movies:/data/media/movies
+    ports:
+      - 8096:8096

@@ -1,0 +1,53 @@
+- name: make sure mediaserver compose folder exists
+  become: true
+  file:
+    path: /node/apps/mediaserver
+    state: directory
+    owner: landryl
+    group: landryl
+
+- name: make sure mediaserver folder exists
+  become: true
+  file:
+    path: /node/data/mediaserver/{{ item }}
+    state: directory
+    owner: landryl
+    group: landryl
+    recurse: yes
+  loop:
+    - transmission
+    - jackett
+    - radarr
+    - jellyfin
+
+- name: make sure downloads folder exists
+  become: true
+  file:
+    path: /node/data/media/downloads
+    state: directory
+    owner: landryl
+    group: landryl
+    recurse: yes
+
+- name: make sure movies folder exists
+  become: true
+  file:
+    path: /node/data/media/movies
+    state: directory
+    owner: landryl
+    group: landryl
+    recurse: yes
+
+- name: copy docker compose files
+  template:
+    src: docker-compose.yml
+    dest: /node/apps/mediaserver/docker-compose.yml
+
+- name: deploy docker compose stack
+  docker_compose:
+    project_src: /node/apps/mediaserver
+    remove_orphans: true
+  register: output
+
+- ansible.builtin.debug:
+    var: output
