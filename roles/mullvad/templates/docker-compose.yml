@@ -1,5 +1,9 @@
 version: "3"
 
+networks:
+  traefik:
+    external: true
+
 services:
   gateway:
     image: qmcgaw/gluetun
@@ -16,3 +20,5 @@ services:
       - OWNED_ONLY=yes
     ports:
       {{ mullvad_ports | to_nice_yaml | indent(6) }}
+    networks:
+      - traefik

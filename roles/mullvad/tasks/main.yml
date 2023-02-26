@@ -6,11 +6,6 @@
     owner: landryl
     group: landryl
 
-- name: make sure mullvad docker network exists
-  docker_network:
-    name: mullvad
-    state: present
-
 - name: copy docker compose files
   template:
     src: docker-compose.yml
