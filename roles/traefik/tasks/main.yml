@@ -1,0 +1,26 @@
+- name: make sure traefik compose folder exists
+  become: true
+  file:
+    path: /node/apps/traefik
+    state: directory
+    owner: landryl
+    group: landryl
+
+- name: make sure traefik docker network exists
+  docker_network:
+    name: traefik
+    state: present
+
+- name: copy docker compose files
+  template:
+    src: docker-compose.yml
+    dest: /node/apps/traefik/docker-compose.yml
+
+- name: deploy docker compose stack
+  docker_compose:
+    project_src: /node/apps/traefik
+    remove_orphans: true
+  register: output
+
+- ansible.builtin.debug:
+    var: output

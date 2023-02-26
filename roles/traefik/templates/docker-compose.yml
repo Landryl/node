@@ -1,0 +1,27 @@
+version: "3"
+
+networks:
+  traefik:
+    external: true
+
+services:
+  server:
+    image: traefik
+    container_name: traefik
+    command:
+      - "--api.insecure=true"
+      - "--providers.docker=true"
+      - "--providers.docker.network=traefik"
+      - "--providers.docker.exposedbydefault=false"
+      - "--entrypoints.web.address=:80"
+    environment:
+      - USER_UID=1000
+      - USER_GID=1000
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    restart: always
+    ports:
+      - "8080:8080"
+      - "80:80"
+    networks:
+      - traefik

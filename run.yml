@@ -6,6 +6,7 @@
     - mullvad
     - bitcoincore
     - mediaserver
+    - traefik
   vars:
     mullvad_ports:
       - 8332:8332 # bitcoin
