@@ -1,5 +1,9 @@
 version: "3"
 
+networks:
+  traefik:
+    external: true
+
 services:
   transmission:
     image: linuxserver/transmission:latest
@@ -13,6 +17,12 @@ services:
       - /node/data/mediaserver/transmission/config:/config
       - /node/data/media/downloads:/data/downloads
     network_mode: container:mullvad
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.transmission.rule=Host(`transmission.node.local`)"
+      - "traefik.http.routers.transmission.entrypoints=web"
+      - "traefik.http.routers.transmission.service=transmission"
+      - "traefik.http.services.transmission.loadbalancer.server.port=9091"
 
   jackett:
     image: linuxserver/jackett:latest
@@ -27,6 +37,12 @@ services:
     volumes:
       - /node/data/mediaserver/jackett/config:/config
     network_mode: container:mullvad
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.jackett.rule=Host(`jackett.node.local`)"
+      - "traefik.http.routers.jackett.entrypoints=web"
+      - "traefik.http.routers.jackett.service=jackett"
+      - "traefik.http.services.jackett.loadbalancer.server.port=9117"
 
   radarr:
     image: linuxserver/radarr:latest
@@ -40,6 +56,12 @@ services:
       - /node/data/mediaserver/radarr/config:/config
       - /node/data/media:/data
     network_mode: container:mullvad
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.radarr.rule=Host(`radarr.node.local`)"
+      - "traefik.http.routers.radarr.entrypoints=web"
+      - "traefik.http.routers.radarr.service=radarr"
+      - "traefik.http.services.radarr.loadbalancer.server.port=7878"
 
   jellyfin:
     image: linuxserver/jellyfin:latest
@@ -52,5 +74,11 @@ services:
     volumes:
       - /node/data/mediaserver/jellyfin/config:/config
       - /node/data/media/movies:/data/media/movies
-    ports:
-      - 8096:8096
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.jellyfin.rule=Host(`jellyfin.node.local`)"
+      - "traefik.http.routers.jellyfin.entrypoints=web"
+      - "traefik.http.routers.jellyfin.service=jellyfin"
+      - "traefik.http.services.jellyfin.loadbalancer.server.port=8096"
+    networks:
+      - traefik

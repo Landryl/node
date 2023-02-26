@@ -11,6 +11,3 @@
   vars:
     mullvad_ports:
       - 8332:8332 # bitcoin
-      - 9091:9091 # transmission
-      - 7878:7878 # radarr
-      - 9117:9117 # jackett
