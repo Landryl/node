@@ -1,0 +1,33 @@
+- name: make sure pihole compose folder exists
+  become: true
+  file:
+    path: /node/apps/pihole
+    state: directory
+    owner: landryl
+    group: landryl
+
+- name: make sure pihole data folders exists
+  become: true
+  file:
+    path: /node/data/mediaserver/{{ item }}
+    state: directory
+    owner: landryl
+    group: landryl
+    recurse: yes
+  loop:
+    - etc-pihole
+    - etc-dnsmasq
+
+- name: copy docker compose files
+  template:
+    src: docker-compose.yml
+    dest: /node/apps/pihole/docker-compose.yml
+
+- name: deploy docker compose stack
+  docker_compose:
+    project_src: /node/apps/pihole
+    remove_orphans: true
+  register: output
+
+- ansible.builtin.debug:
+    var: output
